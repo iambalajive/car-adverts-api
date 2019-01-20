@@ -3,7 +3,6 @@ package com.cars.adverts.controller
 import java.util.UUID
 
 import com.cars.adverts.controller.models.{Advertisement, NotFound}
-import com.cars.adverts.dao.CarAdvertsRepository
 import com.cars.adverts.services.AdvertsService
 import javax.annotation.Resource
 import javax.inject.{Inject, Named}

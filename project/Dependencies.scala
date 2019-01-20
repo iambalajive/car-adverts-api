@@ -22,12 +22,18 @@ object Dependencies {
 
 
 
+  // validation
+  
+  val wix = "com.wix" %% "accord-core" % "0.7.3"
+  
+  
   // dropwizard
   val dropwizardScala = "com.datasift.dropwizard.scala" %% "dropwizard-scala-core" % "1.3.7-1"
   val dropwizardguicer = "ru.vyarus" % "dropwizard-guicey" % "4.2.2"
 
-
-  val dropwizard = Seq(dropwizardScala,dropwizardguicer)
+  
+  
+  val dropwizard = Seq(dropwizardScala,dropwizardguicer,wix)
   
   val dao = Seq(postgres,slick,flyway)
 
