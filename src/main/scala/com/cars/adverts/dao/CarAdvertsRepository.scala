@@ -15,19 +15,19 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent) (implicit @Named
 
   private val db: Database = dbComponent.db
 
-  def create(carAdvert: CarAdvert):Future[CarAdvert] = {
+  def create(carAdvert: CarAdvertEntity):Future[CarAdvertEntity] = {
     val id = UUID.randomUUID()
     val toBeInserted = carAdvert.copy(id = Some(id))
     db.run { carAdverts += toBeInserted }.map(_ => toBeInserted )
   }
 
-  def getById(id: UUID): Future[Option[CarAdvert]] = db.run { carAdverts.filter(_.id === id).result.headOption }
+  def getById(id: UUID): Future[Option[CarAdvertEntity]] = db.run { carAdverts.filter(_.id === id).result.headOption }
 
-  def getAll(sortOrder:Int,sortKey:String): Future[List[CarAdvert]] = {
+  def getAll(sortOrder:Int,sortKey:String): Future[List[CarAdvertEntity]] = {
     db.run { carAdverts.sortBy(_.id).to[List].result }
   }
 
-  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[Int] = None):Future[List[((CarAdvert,FuelType),VehicleCondition)]]= {
+  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[Int] = None):Future[List[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]]= {
 
     val query = carAdverts.join(fuelTypes)
       .on((carAdvert,fuelType) => carAdvert.fuelTypeId === fuelType.id)
@@ -41,7 +41,7 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent) (implicit @Named
 
   def delete(id: UUID): Future[Int] = db.run { carAdverts.filter(_.id === id).delete }
 
-  def update(carAdvert: CarAdvert): Future[CarAdvert] = db.run { carAdverts.filter(_.id === carAdvert.id).update(carAdvert).map(_ => carAdvert) }
+  def update(carAdvert: CarAdvertEntity): Future[CarAdvertEntity] = db.run { carAdverts.filter(_.id === carAdvert.id).update(carAdvert).map(_ => carAdvert) }
 
 }
 
@@ -52,7 +52,7 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
 
   import driver.api._
 
-  private[CarAdvertsTable] class CarAdverts(tag: Tag) extends Table[CarAdvert](tag,"CAR_ADVERTS")  {
+  private[CarAdvertsTable] class CarAdverts(tag: Tag) extends Table[CarAdvertEntity](tag,"CAR_ADVERTS")  {
     val id = column[UUID]("ID", O.PrimaryKey)
     val fuelTypeId = column[Int]("FUEL_TYPE_ID")
     val title = column[String]("TITLE")
@@ -60,7 +60,7 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
     val conditionType = column[Int]("CONDITION_TYPE_ID")
     val mileage = column[String]("MILEAGE")
     val firstReg = column[java.sql.Date]("FIRST_REG")
-    def * = (id.?,fuelTypeId,title,price,conditionType,mileage.?,firstReg.?) <> (CarAdvert.tupled, CarAdvert.unapply)
+    def * = (id.?,fuelTypeId,title,price,conditionType,mileage.?,firstReg.?) <> (CarAdvertEntity.tupled, CarAdvertEntity.unapply)
 
   }
 
@@ -69,5 +69,5 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
 
 
 
-case class CarAdvert(id: Option[UUID]= None, fuelTypeId:Int, title:String, price:Int,
-                     conditionType:Int, mileage:Option[String] = None, firstReg:Option[java.sql.Date] = None)
+case class CarAdvertEntity(id: Option[UUID]= None, fuelTypeId:Int, title:String, price:Int,
+                           conditionType:Int, mileage:Option[String] = None, firstReg:Option[java.sql.Date] = None)

@@ -20,7 +20,7 @@ class FuelTypeRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpec 
 
   it should "be able to insert a new fuel type if required " in {
 
-    val fuelType = FuelType("ELECTRONIC",3)
+    val fuelType = FuelTypeEntity("ELECTRONIC",3)
     val added = fuelTypeRepository.create(fuelType).futureValue
     assert(added === 1 )
   }

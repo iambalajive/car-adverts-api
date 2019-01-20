@@ -20,7 +20,7 @@ class VehicleConditionRepositorySpec  extends FlatSpec with BeforeAndAfter with 
 
   it should "be able to insert a new vehicle type if required " in {
 
-    val vehicleCondition = VehicleCondition(3,"SEMI_NEW")
+    val vehicleCondition = VehicleConditionEntity(3,"SEMI_NEW")
     val added = vehicleConditionRepository.create(vehicleCondition).futureValue
     assert(added === 1 )
   }

@@ -16,13 +16,13 @@ class FuelTypeRepository @Inject() (dbComponent: DBComponent) extends FuelTypeTa
 
    private val db: Database = dbComponent.db
 
-   def create(fuelType: FuelType):Future[Int] = db.run { fuelTypes += fuelType }
+   def create(fuelType: FuelTypeEntity):Future[Int] = db.run { fuelTypes += fuelType }
 
    def getByFuelTypeDesc(fuelTypeDesc:String) = db.run{ fuelTypes.filter(_.fuelTypeDesc === fuelTypeDesc).result.headOption}
 
-   def getById(id: Int): Future[Option[FuelType]] = db.run { fuelTypes.filter(_.id === id).result.headOption }
+   def getById(id: Int): Future[Option[FuelTypeEntity]] = db.run { fuelTypes.filter(_.id === id).result.headOption }
 
-   def getAll(): Future[List[FuelType]] = db.run { fuelTypes.to[List].result }
+   def getAll(): Future[List[FuelTypeEntity]] = db.run { fuelTypes.to[List].result }
 
    def delete(id: Int): Future[Int] = db.run { fuelTypes.filter(_.id === id).delete }
 
@@ -33,10 +33,10 @@ private [dao] trait FuelTypeTable {
   protected val driver:JdbcProfile
   import driver.api._
 
-  private[FuelTypeTable] class FuelTypes(tag: Tag) extends Table[FuelType](tag,"FUEL_TYPE") {
+  private[FuelTypeTable] class FuelTypes(tag: Tag) extends Table[FuelTypeEntity](tag,"FUEL_TYPE") {
     val id = column[Int]("ID", O.PrimaryKey)
     val fuelTypeDesc = column[String]("FUEL_TYPE_DESC")
-    def * = (fuelTypeDesc,id) <> (FuelType.tupled, FuelType.unapply)
+    def * = (fuelTypeDesc,id) <> (FuelTypeEntity.tupled, FuelTypeEntity.unapply)
   }
 
 
@@ -44,4 +44,4 @@ private [dao] trait FuelTypeTable {
 
 }
 
-case class FuelType(fuelTypeDesc: String, id: Int)
+case class FuelTypeEntity(fuelTypeDesc: String, id: Int)
