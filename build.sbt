@@ -9,5 +9,5 @@ scalaVersion := "2.12.8"
 
 lazy val app = (project in file("."))
   .settings(
-    libraryDependencies ++= applicationDependencies
+    libraryDependencies ++= dropwizard ++ dao ++ testDeps
   ).enablePlugins(JavaAppPackaging)
