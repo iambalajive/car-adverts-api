@@ -1,6 +1,5 @@
 package com.cars.adverts.dao
 
-import java.sql.Date
 import java.util.UUID
 
 import javax.inject.{Inject, Named, Singleton}
@@ -48,15 +47,18 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent)
     val sortKeyParam = sortKey.getOrElse("id")
     val sortOrderParam = sortOrder.getOrElse("desc")
 
-   val queryWithSort = sortKeyParam match  {
-      case "id" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.id.desc) else joinQuery.sortBy(_._1._1.id)
-      case "condition" => if(sortOrderParam == "desc") joinQuery.sortBy(_._2.condition.desc)  else joinQuery.sortBy(_._2.condition)
-      case "title" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.title.desc)  else joinQuery.sortBy(_._1._1.title)
-      case "price" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.price.desc)  else joinQuery.sortBy(_._1._1.price)
-      case "mileage" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.mileage.desc)  else joinQuery.sortBy(_._1._1.mileage)
-      case "firstReg" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.firstReg.desc)  else joinQuery.sortBy(_._1._1.firstReg)
-      case "fuelType" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._2.fuelTypeDesc.desc)  else joinQuery.sortBy(_._1._2.fuelTypeDesc)
-   }
+
+   val queryWithSort = joinQuery.sortBy{
+      sortKeyParam match {
+        case "id" => if(sortOrderParam == "desc") _._1._1.id.desc else _._1._1.id.asc
+        case "condition" => if(sortOrderParam == "desc") _._2.condition.desc  else _._2.condition.asc
+        case "title" => if(sortOrderParam == "desc") _._1._1.title.desc  else _._1._1.title.asc
+        case "price" => if(sortOrderParam == "desc") _._1._1.price.desc  else _._1._1.price.asc
+        case "mileage" => if(sortOrderParam == "desc") _._1._1.mileage.desc  else _._1._1.mileage.asc
+        case "firstReg" => if(sortOrderParam == "desc") _._1._1.firstReg.desc  else _._1._1.firstReg.asc
+        case "fuelType" => if(sortOrderParam == "desc") _._1._2.fuelTypeDesc.desc  else _._1._2.fuelTypeDesc.asc
+      }
+    }
 
     db.run {
       queryWithSort.to[List].result
