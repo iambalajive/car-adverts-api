@@ -1,6 +1,8 @@
 package com.cars.adverts.dao
 
 import org.scalatest.{BeforeAndAfter, FlatSpec}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class CarAdvertsRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpec {
 

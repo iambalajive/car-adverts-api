@@ -2,15 +2,13 @@ package com.cars.adverts.dao
 
 import java.util.UUID
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CarAdvertsRepository @Inject() (dbComponent: DBComponent) extends CarAdvertsTable {
+class CarAdvertsRepository @Inject() (dbComponent: DBComponent) (implicit @Named("executionContext") executionContext: ExecutionContext) extends CarAdvertsTable {
 
   override val driver = dbComponent.driver
   import driver.api._
