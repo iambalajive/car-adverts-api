@@ -37,7 +37,8 @@ object Advertisement {
     a.condition is in ( ValidConditionTypes.NEW.toString, ValidConditionTypes.USED.toString)
 
     // if condition is USED then mileage and firstReg is required
-    if(a.condition == "USED") {
+    a.condition match {
+      case "USED" =>
       a.mileage.isDefined is true
       a.firstReg.isDefined is true
 

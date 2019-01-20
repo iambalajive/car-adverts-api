@@ -11,3 +11,7 @@ object Success {
   def build = Message("The given operation was a success")
 }
 
+
+object BadRequest {
+  def build = Message("The request is invalid")
+}

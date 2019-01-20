@@ -2,7 +2,7 @@ package com.cars.adverts.controller
 
 import java.util.UUID
 
-import com.cars.adverts.controller.models.{Advertisement, NotFound}
+import com.cars.adverts.controller.models.{Advertisement, BadRequest, NotFound}
 import com.cars.adverts.services.AdvertsService
 import javax.annotation.Resource
 import javax.inject.{Inject, Named}
@@ -60,13 +60,13 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
   @PUT
   def add(@NotNull  advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
     if(Advertisement.isValid(advertisement).isFailure) {
-      asyncResponse.resume(Response.ok(Status.BAD_REQUEST).build())
+      asyncResponse.resume(Response.ok(Status.BAD_REQUEST).entity(BadRequest.build).build())
     }
     advertsService.upsert(advertisement).onComplete {
       case Success(x) => {
         x match {
           case Some(y) => asyncResponse.resume(Response.ok(y).build())
-          case None => asyncResponse.resume(Response.ok(Status.BAD_REQUEST).build())
+          case None => asyncResponse.resume(Response.ok(Status.BAD_REQUEST).entity(BadRequest.build).build())
         }
       }
       case Failure(exception) => {
