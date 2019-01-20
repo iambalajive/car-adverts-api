@@ -46,7 +46,7 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
   def list(@QueryParam("sortKey") sortKey :Option[String], @QueryParam("sortOrder") sortOrder: Option[String],
            @Suspended asyncResponse: AsyncResponse) = {
 
-    advertsService.getAll(None,None).onComplete {
+    advertsService.getAll(sortKey,sortOrder).onComplete {
       case Success(adverts) =>  asyncResponse.resume(Response.ok(adverts).build())
 
       case Failure(exception) => {
