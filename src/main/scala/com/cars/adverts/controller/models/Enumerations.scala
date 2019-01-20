@@ -14,3 +14,17 @@ object ValidConditionTypes extends Enumeration {
   val USED = Value("USED")
   val NEW = Value("NEW")
 }
+
+
+object ValidSortOrders extends Enumeration {
+  type ValidSortOrders = Value
+
+  val ASC = Value("asc")
+  val DESC = Value("desc")
+}
+
+
+object ValidSortKeys extends Enumeration {
+  val ID = Value("id")
+
+}

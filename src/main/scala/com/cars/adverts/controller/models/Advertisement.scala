@@ -5,7 +5,7 @@ import java.util.UUID
 import com.cars.adverts.dao.{CarAdvertEntity, FuelTypeEntity, VehicleConditionEntity}
 
 
-case class Advertisement(title:String, id:Option[UUID], fuelType:String, price:Int,condition:String, mileage:Option[Int], firstReg:Option[String])
+case class Advertisement(title:String, id:Option[UUID], fuelType:String, price:Int,condition:String, mileage:Option[Int] = None, firstReg:Option[String] = None)
 
 object Advertisement {
 
@@ -47,6 +47,11 @@ object Advertisement {
       }
     }
 
+  }
+
+  def isValid(advertisement: Advertisement) = {
+    import com.wix.accord._
+    validate(advertisement)
   }
 
 

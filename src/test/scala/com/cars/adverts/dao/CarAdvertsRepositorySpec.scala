@@ -1,6 +1,5 @@
 package com.cars.adverts.dao
 
-import java.sql.Date
 
 import com.cars.adverts.controller.models.DateUtils
 import org.scalatest.{BeforeAndAfter, FlatSpec}

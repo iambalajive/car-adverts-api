@@ -2,6 +2,7 @@ package com.cars.adverts.dao
 
 import java.util.UUID
 
+import com.cars.adverts.controller.models.ValidSortOrders
 import javax.inject.{Inject, Named, Singleton}
 import slick.jdbc.JdbcProfile
 import slick.lifted.{ColumnOrdered, Rep}
@@ -50,13 +51,16 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent)
 
    val queryWithSort = joinQuery.sortBy{
       sortKeyParam match {
-        case "id" => if(sortOrderParam == "desc") _._1._1.id.desc else _._1._1.id.asc
-        case "condition" => if(sortOrderParam == "desc") _._2.condition.desc  else _._2.condition.asc
-        case "title" => if(sortOrderParam == "desc") _._1._1.title.desc  else _._1._1.title.asc
-        case "price" => if(sortOrderParam == "desc") _._1._1.price.desc  else _._1._1.price.asc
-        case "mileage" => if(sortOrderParam == "desc") _._1._1.mileage.desc  else _._1._1.mileage.asc
-        case "firstReg" => if(sortOrderParam == "desc") _._1._1.firstReg.desc  else _._1._1.firstReg.asc
-        case "fuelType" => if(sortOrderParam == "desc") _._1._2.fuelTypeDesc.desc  else _._1._2.fuelTypeDesc.asc
+        case "condition" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._2.condition.desc  else _._2.condition.asc
+        case "title" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._1.title.desc  else _._1._1.title.asc
+        case "price" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._1.price.desc  else _._1._1.price.asc
+        case "mileage" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._1.mileage.desc  else _._1._1.mileage.asc
+        case "firstReg" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._1.firstReg.desc  else _._1._1.firstReg.asc
+        case "fuelType" => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._2.fuelTypeDesc.desc  else _._1._2.fuelTypeDesc.asc
+
+        //Default sort by Id
+        case _ => if(sortOrderParam == ValidSortOrders.DESC.toString) _._1._1.id.desc else _._1._1.id.asc
+
       }
     }
 

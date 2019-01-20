@@ -15,7 +15,7 @@ object Application extends ScalaApplication[AppConfiguration] {
   }
 
   override def run(conf: AppConfiguration, env: Environment): Unit = {
-    new DBMigrator(conf.database.jdbcUrl,conf.database.username,conf.database.password).migrate
+//    new DBMigrator(conf.database.jdbcUrl,conf.database.username,conf.database.password).migrate
   }
 }
 
