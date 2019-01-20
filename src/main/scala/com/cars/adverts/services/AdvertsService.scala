@@ -31,7 +31,7 @@ class AdvertsService @Inject()(carAdvertsRepository: CarAdvertsRepository,
       }
    }
 
-   def getAll(sortKey:Option[String] = None, sortOrder :Option[Int]) = {
+   def getAll(sortKey:Option[String] = None, sortOrder :Option[String]) = {
       carAdvertsRepository.getAllWithMeta(sortKey,sortOrder).map {
          adverts => adverts.map(advert => Advertisement.fromEntities(advert._1._1,advert._1._2,advert._2))
       }

@@ -1,9 +1,11 @@
 package com.cars.adverts.dao
 
+import java.sql.Date
 import java.util.UUID
 
 import javax.inject.{Inject, Named, Singleton}
 import slick.jdbc.JdbcProfile
+import slick.lifted.{ColumnOrdered, Rep}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,9 +43,23 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent)
   }
 
 
-  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[Int] = None):Future[List[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]]= {
+  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[String] = None) :Future[List[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]]= {
+
+    val sortKeyParam = sortKey.getOrElse("id")
+    val sortOrderParam = sortOrder.getOrElse("desc")
+
+   val queryWithSort = sortKeyParam match  {
+      case "id" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.id.desc) else joinQuery.sortBy(_._1._1.id)
+      case "condition" => if(sortOrderParam == "desc") joinQuery.sortBy(_._2.condition.desc)  else joinQuery.sortBy(_._2.condition)
+      case "title" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.title.desc)  else joinQuery.sortBy(_._1._1.title)
+      case "price" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.price.desc)  else joinQuery.sortBy(_._1._1.price)
+      case "mileage" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.mileage.desc)  else joinQuery.sortBy(_._1._1.mileage)
+      case "firstReg" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._1.firstReg.desc)  else joinQuery.sortBy(_._1._1.firstReg)
+      case "fuelType" => if(sortOrderParam == "desc") joinQuery.sortBy(_._1._2.fuelTypeDesc.desc)  else joinQuery.sortBy(_._1._2.fuelTypeDesc)
+   }
+
     db.run {
-      joinQuery.to[List].result
+      queryWithSort.to[List].result
     }
   }
 
@@ -74,6 +90,10 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
 
   protected val carAdverts = TableQuery[CarAdverts]
 }
+
+trait Selector { def sortFields: Map[String, Rep[_]] }
+
+
 
 
 
