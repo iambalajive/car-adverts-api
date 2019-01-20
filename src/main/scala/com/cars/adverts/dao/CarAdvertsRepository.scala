@@ -66,7 +66,7 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
     val title = column[String]("TITLE")
     val price = column[Int]("PRICE")
     val conditionType = column[Int]("CONDITION_TYPE_ID")
-    val mileage = column[String]("MILEAGE")
+    val mileage = column[Int]("MILEAGE")
     val firstReg = column[java.sql.Date]("FIRST_REG")
     def * = (id.?,fuelTypeId,title,price,conditionType,mileage.?,firstReg.?) <> (CarAdvertEntity.tupled, CarAdvertEntity.unapply)
 
@@ -78,4 +78,4 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
 
 
 case class CarAdvertEntity(id: Option[UUID]= None, fuelTypeId:Int, title:String, price:Int,
-                           conditionType:Int, mileage:Option[String] = None, firstReg:Option[java.sql.Date] = None)
+                           conditionType:Int, mileage:Option[Int] = None, firstReg:Option[java.sql.Date] = None)

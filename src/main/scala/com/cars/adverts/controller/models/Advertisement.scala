@@ -5,7 +5,7 @@ import java.util.{Date, UUID}
 import com.cars.adverts.dao.{CarAdvertEntity, FuelTypeEntity, VehicleConditionEntity}
 
 
-case class Advertisement(title:String, id:Option[UUID], fuelType:String, price:Int,condition:String, mileage:Option[String], firstReg:Option[Date])
+case class Advertisement(title:String, id:Option[UUID], fuelType:String, price:Int,condition:String, mileage:Option[Int], firstReg:Option[Date])
 
 object Advertisement {
 

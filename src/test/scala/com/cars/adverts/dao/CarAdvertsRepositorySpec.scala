@@ -80,7 +80,7 @@ class CarAdvertsRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpe
 
   it should "be able to create an entity with reg date" in {
 
-    val carAdvert1 = CarAdvertEntity(None,1,"My Listing",14,1,Some("132"))
+    val carAdvert1 = CarAdvertEntity(None,1,"My Listing",14,1,Some(132))
 
     val added = carAdvertsRepository.create(carAdvert1).futureValue
 
