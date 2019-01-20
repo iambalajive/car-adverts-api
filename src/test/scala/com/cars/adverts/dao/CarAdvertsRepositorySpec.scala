@@ -1,6 +1,9 @@
 package com.cars.adverts.dao
 
+import java.sql.Date
+
 import org.scalatest.{BeforeAndAfter, FlatSpec}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
@@ -74,6 +77,17 @@ class CarAdvertsRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpe
     assert(carAdvert.get._1._1.id === added.id)
   }
 
+
+  it should "be able to create an entity with reg date" in {
+
+    val carAdvert1 = CarAdvertEntity(None,1,"My Listing",14,1,Some("132"))
+
+    val added = carAdvertsRepository.create(carAdvert1).futureValue
+
+    val carAdvert = carAdvertsRepository.getWithMetaById(added.id.get).futureValue
+
+    assert(carAdvert.get._1._1.id === added.id)
+  }
 
 
   after {

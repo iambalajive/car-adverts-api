@@ -15,8 +15,8 @@ object Advertisement {
       fuelTypeEntity.fuelTypeDesc,
       carAdvertEntity.price,
       vehicleConditionEntity.condition,
-      None,
-      None
+      carAdvertEntity.mileage,
+      carAdvertEntity.firstReg.map(date => new Date(date.getTime))
     )
   }
 }
