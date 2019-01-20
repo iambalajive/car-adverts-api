@@ -51,9 +51,7 @@ class AdvertsService @Inject()(carAdvertsRepository: CarAdvertsRepository,
          case Some(fuelType) => vehicleConditionRepository.getByCondition(advertisement.condition).flatMap {
             case Some(vehicleCondition) => {
                val carAdvert = Advertisement.toEntity(advertisement,fuelType,vehicleCondition)
-               createOrUpdate(carAdvert).map{
-                  _ => Some(advertisement)
-               }
+               createOrUpdate(carAdvert).map(x => Some(Advertisement.fromEntities(x,fuelType,vehicleCondition)))
             }
             case None  => Future.successful(None)
          }
