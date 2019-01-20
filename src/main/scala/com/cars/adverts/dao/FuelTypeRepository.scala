@@ -33,9 +33,9 @@ private [dao] trait FuelTypeTable {
   protected val driver:JdbcProfile
   import driver.api._
 
-  private[FuelTypeTable] class FuelTypes(tag: Tag) extends Table[FuelTypeEntity](tag,"FUEL_TYPE") {
-    val id = column[Int]("ID", O.PrimaryKey)
-    val fuelTypeDesc = column[String]("FUEL_TYPE_DESC")
+  private[FuelTypeTable] class FuelTypes(tag: Tag) extends Table[FuelTypeEntity](tag,"fuel_type") {
+    val id = column[Int]("id", O.PrimaryKey)
+    val fuelTypeDesc = column[String]("fuel_type_desc")
     def * = (fuelTypeDesc,id) <> (FuelTypeEntity.tupled, FuelTypeEntity.unapply)
   }
 

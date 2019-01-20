@@ -33,9 +33,9 @@ private [dao] trait VehicleConditionTable {
   protected val driver:JdbcProfile
   import driver.api._
 
-  private[VehicleConditionTable] class VehicleConditions(tag: Tag) extends Table[VehicleConditionEntity](tag,"VEHICLE_CONDITION") {
-    val id = column[Int]("ID", O.PrimaryKey)
-    val condition = column[String]("CONDITION")
+  private[VehicleConditionTable] class VehicleConditions(tag: Tag) extends Table[VehicleConditionEntity](tag,"vehicle_condition") {
+    val id = column[Int]("id", O.PrimaryKey)
+    val condition = column[String]("condition")
     def * = (id,condition) <> (VehicleConditionEntity.tupled, VehicleConditionEntity.unapply)
   }
 

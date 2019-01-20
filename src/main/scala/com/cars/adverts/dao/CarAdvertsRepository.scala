@@ -78,14 +78,14 @@ private [dao] trait CarAdvertsTable extends FuelTypeTable  with VehicleCondition
 
   import driver.api._
 
-  private[CarAdvertsTable] class CarAdverts(tag: Tag) extends Table[CarAdvertEntity](tag,"CAR_ADVERTS")  {
-    val id = column[UUID]("ID", O.PrimaryKey)
-    val fuelTypeId = column[Int]("FUEL_TYPE_ID")
-    val title = column[String]("TITLE")
-    val price = column[Int]("PRICE")
-    val conditionType = column[Int]("CONDITION_TYPE_ID")
-    val mileage = column[Int]("MILEAGE")
-    val firstReg = column[java.sql.Date]("FIRST_REG")
+  private[CarAdvertsTable] class CarAdverts(tag: Tag) extends Table[CarAdvertEntity](tag,"car_adverts")  {
+    val id = column[UUID]("id", O.PrimaryKey)
+    val fuelTypeId = column[Int]("fuel_type_id")
+    val title = column[String]("title")
+    val price = column[Int]("price")
+    val conditionType = column[Int]("condition_type_id")
+    val mileage = column[Int]("mileage")
+    val firstReg = column[java.sql.Date]("first_reg")
     def * = (id.?,fuelTypeId,title,price,conditionType,mileage.?,firstReg.?) <> (CarAdvertEntity.tupled, CarAdvertEntity.unapply)
 
   }

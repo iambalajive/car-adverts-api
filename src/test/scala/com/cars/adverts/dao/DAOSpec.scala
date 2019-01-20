@@ -11,7 +11,7 @@ trait DAOSpec extends ScalaFutures {
 
 
   def createSchema(id:UUID = UUID.randomUUID()) = {
-     val h2jdbcUrl = s"jdbc:h2:mem:${id.toString};DB_CLOSE_DELAY=-1"
+     val h2jdbcUrl = s"jdbc:h2:mem:${id.toString};DB_CLOSE_DELAY=-1;database_to_upper=false"
      new DBMigrator(connectionUrl = h2jdbcUrl,username = "",password = "").migrate
      new H2DBComponent(h2jdbcUrl)
   }
