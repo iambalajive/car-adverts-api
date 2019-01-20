@@ -13,3 +13,5 @@ database:
   url:  personal.cl8mah0cypgj.us-east-2.rds.amazonaws.com
   name: personal
   port: 5432
+
+flywayMigration: false

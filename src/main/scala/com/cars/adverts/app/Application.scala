@@ -19,7 +19,10 @@ object Application extends ScalaApplication[AppConfiguration] {
 
   override def run(conf: AppConfiguration, env: Environment): Unit = {
 
-    new DBMigrator(conf.database.jdbcUrl,conf.database.username,conf.database.password).migrate
+    if(conf.flywayMigration){
+      new DBMigrator(conf.database.jdbcUrl,conf.database.username,conf.database.password).migrate
+
+    }
 
     val cors = env.servlets().addFilter("CORS", classOf[CrossOriginFilter])
 
@@ -32,6 +35,8 @@ object Application extends ScalaApplication[AppConfiguration] {
 
     // Add URL mapping
     cors.addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
+
+
   }
 }
 
