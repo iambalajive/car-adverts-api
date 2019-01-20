@@ -26,14 +26,14 @@ class AdvertsService @Inject()(carAdvertsRepository: CarAdvertsRepository,
 
    def get(id :UUID) = {
       carAdvertsRepository.getWithMetaById(id).map {
-         case Some(tuple) => Some(Advertisement.toAdvertisement(tuple._1._1,tuple._1._2,tuple._2))
+         case Some(tuple) => Some(Advertisement.fromEntities(tuple._1._1,tuple._1._2,tuple._2))
          case _ => None
       }
    }
 
    def getAll(sortKey:Option[String] = None, sortOrder :Option[Int]) = {
       carAdvertsRepository.getAllWithMeta(sortKey,sortOrder).map {
-         adverts => adverts.map(advert => Advertisement.toAdvertisement(advert._1._1,advert._1._2,advert._2))
+         adverts => adverts.map(advert => Advertisement.fromEntities(advert._1._1,advert._1._2,advert._2))
       }
    }
 
@@ -50,7 +50,7 @@ class AdvertsService @Inject()(carAdvertsRepository: CarAdvertsRepository,
       fuelTypeRepository.getByFuelTypeDesc(advertisement.fuelType).flatMap {
          case Some(fuelType) => vehicleConditionRepository.getByCondition(advertisement.condition).flatMap {
             case Some(vehicleCondition) => {
-               val carAdvert = CarAdvertEntity(advertisement.id,fuelType.id,advertisement.title,advertisement.price,vehicleCondition.id,null,null)
+               val carAdvert = Advertisement.toEntity(advertisement,fuelType,vehicleCondition)
                createOrUpdate(carAdvert).map{
                   _ => Some(advertisement)
                }

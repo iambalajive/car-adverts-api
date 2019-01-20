@@ -2,6 +2,7 @@ package com.cars.adverts.dao
 
 import java.util.UUID
 
+import com.cars.adverts.controller.models.{Advertisement, DateUtils}
 import javax.inject.{Inject, Named, Singleton}
 import slick.jdbc.JdbcProfile
 
