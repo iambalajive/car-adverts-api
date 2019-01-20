@@ -63,6 +63,18 @@ class CarAdvertsRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpe
     assert(carAdvert.get.title == modifiedTitle)
   }
 
+  it should "be able to get advertisement with meta by id" in {
+
+    val carAdvert1 = CarAdvertEntity(None,1,"My Listing",14,1)
+
+    val added = carAdvertsRepository.create(carAdvert1).futureValue
+
+    val carAdvert = carAdvertsRepository.getWithMetaById(added.id.get).futureValue
+
+    assert(carAdvert.get._1._1.id === added.id)
+  }
+
+
 
   after {
     tearDown(dbComponent)

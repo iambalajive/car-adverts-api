@@ -8,12 +8,18 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CarAdvertsRepository @Inject() (dbComponent: DBComponent) (implicit @Named("executionContext") executionContext: ExecutionContext) extends CarAdvertsTable {
+class CarAdvertsRepository @Inject() (dbComponent: DBComponent)
+                                     (implicit @Named("executionContext") executionContext: ExecutionContext) extends CarAdvertsTable {
 
   override val driver = dbComponent.driver
   import driver.api._
 
   private val db: Database = dbComponent.db
+
+  private val joinQuery = carAdverts.join(fuelTypes)
+    .on((carAdvert,fuelType) => carAdvert.fuelTypeId === fuelType.id)
+    .join(vehicleConditions).on((x,y) => x._1.conditionType=== y.id)
+
 
   def create(carAdvert: CarAdvertEntity):Future[CarAdvertEntity] = {
     val id = UUID.randomUUID()
@@ -27,15 +33,17 @@ class CarAdvertsRepository @Inject() (dbComponent: DBComponent) (implicit @Named
     db.run { carAdverts.sortBy(_.id).to[List].result }
   }
 
-  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[Int] = None):Future[List[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]]= {
 
-    val query = carAdverts.join(fuelTypes)
-      .on((carAdvert,fuelType) => carAdvert.fuelTypeId === fuelType.id)
-        .join(vehicleConditions).on((x,y) => x._1.conditionType=== y.id)
-//        .sortBy(_._1._1.mileage.asc)
-
+  def getWithMetaById(id : UUID):Future[Option[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]] = {
     db.run {
-      query.to[List].result
+      joinQuery.filter(_._1._1.id === id).result.headOption
+    }
+  }
+
+
+  def getAllWithMeta(sortKey : Option[String] = None, sortOrder: Option[Int] = None):Future[List[((CarAdvertEntity,FuelTypeEntity),VehicleConditionEntity)]]= {
+    db.run {
+      joinQuery.to[List].result
     }
   }
 

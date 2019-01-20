@@ -20,17 +20,19 @@ import scala.util.{Failure, Success}
 @Resource
 @Path("/advertisement")
 @Produces(Array(MediaType.APPLICATION_JSON))
-class AdvertsController @Inject()(carAdvertsRepository: CarAdvertsRepository, advertsService : AdvertsService)
+class AdvertsController @Inject()(advertsService : AdvertsService)
                                  (implicit @Named("executionContext") executionContext: ExecutionContext) {
+
 
   @GET
   @Path("/{id}")
   def get(@PathParam("id") id : UUID, @Suspended asyncResponse: AsyncResponse): Unit = {
 
-    carAdvertsRepository.getById(id).onComplete {
+
+    advertsService.get(id).onComplete {
       case Success(value) => value match  {
         case Some(carAdvert) => asyncResponse.resume(Response.ok(carAdvert).build())
-        case None  => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound("Not found")).build())
+        case None  => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound.build).build())
       }
       case Failure(exception) => {
         asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
@@ -40,18 +42,16 @@ class AdvertsController @Inject()(carAdvertsRepository: CarAdvertsRepository, ad
 
   @GET
   def list(@Suspended asyncResponse: AsyncResponse) = {
-//    carAdvertsRepository.getAll(_,_).onComplete {
-//      case Success(value) => value match  {
-//        case carAdverts: List[CarAdvert] => asyncResponse.resume(Response.ok(carAdverts).build())
-//        case _  => asyncResponse.resume(Response.status(Status.NOT_FOUND).build())
-//      }
-//      case Failure(exception) => asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
-//    }
+    advertsService.getAll(None,None).onComplete {
+      case Success(adverts) =>  asyncResponse.resume(Response.ok(adverts).build())
+      case Failure(exception) => {
+        asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
+      }
+    }
   }
 
 
   @PUT
-  @Consumes(Array(MediaType.APPLICATION_JSON))
   def add(@NotNull  advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
 
     advertsService.upsert(advertisement).onComplete {
@@ -64,19 +64,24 @@ class AdvertsController @Inject()(carAdvertsRepository: CarAdvertsRepository, ad
   @DELETE
   @Path("/{id}")
   def delete(@PathParam("id") id:UUID, @Suspended asyncResponse: AsyncResponse) = {
-    carAdvertsRepository.delete(id).onComplete {
+    advertsService.delete(id).onComplete {
       case Success(result) => result match {
-        case 0 => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound("Not found")).build())
-        case 1 => asyncResponse.resume(Response.ok().entity().build())
+        case 0 => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound.build).build())
+        case 1 => asyncResponse.resume(Response.ok(models.Success.build).entity().build())
       }
-      case Failure(exception) => asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
+      case Failure(exception) => {
+        asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
+      }
     }
   }
 
 
   @POST
   @Path("/{id}")
-  def update(@PathParam("id") id :UUID, @Suspended asyncResponse: AsyncResponse) = {
-
+  def update(@PathParam("id") id :UUID, advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
+    advertsService.upsert(advertisement).onComplete {
+      case Success(x) => asyncResponse.resume(Response.ok(x).build())
+      case Failure(x) => asyncResponse.resume(Response.ok(x).build())
+    }
   }
 }
