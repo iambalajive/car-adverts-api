@@ -5,6 +5,9 @@ import com.codahale.metrics.health.HealthCheck.Result
 import javax.inject.Singleton
 import ru.vyarus.dropwizard.guice.module.installer.feature.health.NamedHealthCheck
 
+/**
+  * Template health check injected by guice
+  */
 @Singleton
 class HealthController extends NamedHealthCheck {
   override def check(): HealthCheck.Result = Result.healthy()

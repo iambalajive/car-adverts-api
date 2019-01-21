@@ -25,6 +25,7 @@ class PostGresDBComponent @Inject() (config : DatabaseConfig) extends DBComponen
     driver =config.driverClass)
 }
 
+
 class H2DBComponent(jdbcUrl : String) extends DBComponent {
   val driver = slick.jdbc.H2Profile
   import driver.api._

@@ -8,6 +8,13 @@ import javax.inject.{Inject, Named, Singleton}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+  * Service class that interfaces with the DAO
+  * @param carAdvertsRepository
+  * @param fuelTypeRepository
+  * @param vehicleConditionRepository
+  * @param executionContext
+  */
 
 @Singleton
 class AdvertsService @Inject()(carAdvertsRepository: CarAdvertsRepository,

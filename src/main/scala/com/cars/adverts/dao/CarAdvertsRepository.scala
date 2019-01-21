@@ -5,7 +5,7 @@ import java.util.UUID
 import com.cars.adverts.controller.models.ValidSortOrders
 import javax.inject.{Inject, Named, Singleton}
 import slick.jdbc.JdbcProfile
-import slick.lifted.{ColumnOrdered, Rep}
+import slick.lifted.Rep
 
 import scala.concurrent.{ExecutionContext, Future}
 

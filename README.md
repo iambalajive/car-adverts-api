@@ -2,7 +2,7 @@
 car-adverts-api
 
 
-Requires java 8 and sbtunziop
+Requires java 8 and sbt
 
 
 # Building the project and running

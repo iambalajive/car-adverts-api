@@ -50,6 +50,7 @@ object Advertisement {
 
   }
 
+  // returns the wix validation results
   def isValid(advertisement: Advertisement) = {
     import com.wix.accord._
     val result = validate(advertisement)(advertisementValidator)

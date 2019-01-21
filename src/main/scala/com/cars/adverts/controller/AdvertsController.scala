@@ -16,7 +16,11 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-
+/**
+  * Adverts controller handles crud for advertisement
+  * @param advertsService
+  * @param executionContext
+  */
 @Resource
 @Path("/advertisement")
 @Produces(Array(MediaType.APPLICATION_JSON))
@@ -41,6 +45,10 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
       }
     }
   }
+
+
+  // List all the adverts . Sort key and sort orders is non mandatory
+  // Default sort key is id and sort order is descending
 
   @GET
   def list(@QueryParam("sortKey") sortKey : Option[String], @QueryParam("sortOrder") sortOrder: Option[String],

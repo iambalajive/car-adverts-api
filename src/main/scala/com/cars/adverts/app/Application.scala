@@ -11,6 +11,10 @@ import javax.servlet.DispatcherType
 import java.util
 
 
+/**
+  * Application bootstap
+  */
+
 object Application extends ScalaApplication[AppConfiguration] {
   override def init(bootstrap: Bootstrap[AppConfiguration]): Unit = {
     bootstrap.addBundle(GuiceBundle.builder[AppConfiguration]().enableAutoConfig("com.cars.adverts").modules(new AppModule).build())
