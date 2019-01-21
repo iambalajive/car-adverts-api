@@ -68,7 +68,7 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
   @PUT
   def add(@NotNull  advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
 
-    if(Advertisement.isValid(advertisement).isSuccess) {
+    if(Advertisement.isValid(advertisement).isSuccess && advertisement.id.isEmpty) {
       advertsService.upsert(advertisement).onComplete {
         case Success(mayBeAdvert) => {
           mayBeAdvert match {
