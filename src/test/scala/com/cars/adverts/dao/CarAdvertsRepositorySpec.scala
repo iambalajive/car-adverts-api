@@ -91,6 +91,25 @@ class CarAdvertsRepositorySpec  extends FlatSpec with BeforeAndAfter with DAOSpe
   }
 
 
+  it should "be able to Sort the entity by give field and order" in {
+
+    val carAdvert1 = CarAdvertEntity(None,1,"My Listing",14,1,Some(132),DateUtils.toSqlDate("11/11/2001"))
+    val carAdvert2 = CarAdvertEntity(None,1,"My Listing",14,1,Some(132),DateUtils.toSqlDate("11/11/2002"))
+    val carAdvert3 = CarAdvertEntity(None,1,"My Listing",14,1,Some(132),DateUtils.toSqlDate("11/11/2005"))
+
+    carAdvertsRepository.create(carAdvert1).futureValue
+    carAdvertsRepository.create(carAdvert2).futureValue
+    carAdvertsRepository.create(carAdvert3).futureValue
+
+    // Descending sor the date
+    val carAdverts = carAdvertsRepository.getAllWithMeta(Some("firstReg"),Some("desc")).futureValue
+
+    val date  = carAdverts.map(_._1._1).head.firstReg.get
+
+   assert(DateUtils.toString(date) == "11/11/2005")
+
+  }
+
   after {
     tearDown(dbComponent)
   }

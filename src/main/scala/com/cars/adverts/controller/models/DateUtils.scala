@@ -22,4 +22,8 @@ object DateUtils {
   def toString(date :util.Date) = {
     dateFormat.format(date)
   }
+
+  def toString(date : Date) = {
+    dateFormat.format(date)
+  }
 }
