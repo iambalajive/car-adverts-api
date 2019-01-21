@@ -32,7 +32,7 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
 
     advertsService.get(id).onComplete {
       case Success(value) => value match  {
-        case Some(carAdvert) => asyncResponse.resume(Response.ok(carAdvert).build())
+        case Some(carAdvert) => asyncResponse.resume(Response.ok().entity(carAdvert).build())
         case None  => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound.build).build())
       }
       case Failure(exception) => {
@@ -43,7 +43,7 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
   }
 
   @GET
-  def list(@QueryParam("sortKey") sortKey :Option[String], @QueryParam("sortOrder") sortOrder: Option[String],
+  def list(@QueryParam("sortKey") sortKey : Option[String], @QueryParam("sortOrder") sortOrder: Option[String],
            @Suspended asyncResponse: AsyncResponse) = {
 
     advertsService.getAll(sortKey,sortOrder).onComplete {
@@ -59,20 +59,24 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
 
   @PUT
   def add(@NotNull  advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
-    if(Advertisement.isValid(advertisement).isFailure) {
-      asyncResponse.resume(Response.ok(Status.BAD_REQUEST).entity(BadRequest.build).build())
-    }
-    advertsService.upsert(advertisement).onComplete {
-      case Success(x) => {
-        x match {
-          case Some(y) => asyncResponse.resume(Response.ok(y).build())
-          case None => asyncResponse.resume(Response.ok(Status.BAD_REQUEST).entity(BadRequest.build).build())
+
+    if(Advertisement.isValid(advertisement).isSuccess) {
+      advertsService.upsert(advertisement).onComplete {
+        case Success(mayBeAdvert) => {
+          mayBeAdvert match {
+            case Some(advert) => asyncResponse.resume(Response.ok().entity(advert).build())
+            case None => {
+              asyncResponse.resume(Response.status(Status.BAD_REQUEST).entity(BadRequest.build).build())
+            }
+          }
+        }
+        case Failure(exception) => {
+          logger.error(exception.getMessage)
+          asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
         }
       }
-      case Failure(exception) => {
-        logger.error(exception.getMessage)
-        asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
-      }
+    }else{
+      asyncResponse.resume(Response.status(Status.BAD_REQUEST).entity(BadRequest.build).build())
     }
 
   }
@@ -83,7 +87,7 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
     advertsService.delete(id).onComplete {
       case Success(result) => result match {
         case 0 => asyncResponse.resume(Response.status(Status.NOT_FOUND).entity(NotFound.build).build())
-        case 1 => asyncResponse.resume(Response.ok().entity(models.Success.build).build())
+        case _ => asyncResponse.resume(Response.ok().entity(models.Success.build).build())
       }
       case Failure(exception) => {
         logger.error(exception.getMessage)
@@ -96,14 +100,13 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
   @POST
   @Path("/{id}")
   def update(@PathParam("id") id :UUID, @NotNull advertisement: Advertisement, @Suspended asyncResponse: AsyncResponse) = {
-    if(advertisement.id.isEmpty || Advertisement.isValid(advertisement).isFailure) {
-      asyncResponse.resume(Response.ok(Status.BAD_REQUEST).build())
-    }
+
+    if(advertisement.id.isDefined && Advertisement.isValid(advertisement).isSuccess) {
     advertsService.upsert(advertisement).onComplete {
       case Success(mayBeAdvert) => {
         mayBeAdvert match {
           case Some(advert) => asyncResponse.resume(Response.ok().entity(advert).build())
-          case None =>   asyncResponse.resume(Response.ok(Status.BAD_REQUEST).build())
+          case None =>   asyncResponse.resume(Response.status(Status.BAD_REQUEST).entity(BadRequest.build).build())
         }
 
       }
@@ -111,6 +114,9 @@ class AdvertsController @Inject()(advertsService : AdvertsService)
         logger.error(exception.getMessage)
         asyncResponse.resume(Response.status(Status.INTERNAL_SERVER_ERROR).build())
       }
+    }
+  } else{
+      asyncResponse.resume(Response.status(Status.BAD_REQUEST).entity(BadRequest.build).build())
     }
   }
 }

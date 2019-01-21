@@ -24,6 +24,13 @@ object Advertisement {
   // Wix validations
   import com.wix.accord.dsl._
 
+  implicit val usedAdValidator =  validator[Advertisement] { a =>
+    // if condition is USED then mileage and firstReg is required
+        a.mileage.isDefined is true
+        a.firstReg.isDefined is true
+
+    }
+
   implicit val advertisementValidator = validator[Advertisement] { a =>
     a.title is notEmpty
     a.fuelType is notEmpty
@@ -36,23 +43,21 @@ object Advertisement {
     // valid condition types
     a.condition is in ( ValidConditionTypes.NEW.toString, ValidConditionTypes.USED.toString)
 
-    // if condition is USED then mileage and firstReg is required
-    a.condition match {
-      case "USED" =>
-      a.mileage.isDefined is true
-      a.firstReg.isDefined is true
-
-      // Check is the date format is valid
-      if(a.firstReg.isDefined) {
-        DateUtils.toUtilDate(a.firstReg.get).isDefined is true
-      }
+    // Check is the date format is valid
+    if(a.firstReg.isDefined) {
+      DateUtils.toUtilDate(a.firstReg.get).isDefined is true
     }
 
   }
 
   def isValid(advertisement: Advertisement) = {
     import com.wix.accord._
-    validate(advertisement)
+    val result = validate(advertisement)(advertisementValidator)
+
+    if(result.isSuccess && advertisement.condition == ValidConditionTypes.USED.toString) {
+      validate(advertisement)(usedAdValidator)
+    }else result
+
   }
 
 
