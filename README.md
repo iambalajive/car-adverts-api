@@ -13,7 +13,7 @@ sbt dist
 
 a) With Docker
 
-   * execute build script inside bin/build.sh to create a docker image
+   * execute build script build.sh to create a docker image
    * docker run -p 8000:8000 -p 8001:8001 car-adverts-api
 
 b) Without docker
