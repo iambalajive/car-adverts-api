@@ -5,6 +5,7 @@ import java.util.UUID
 
 import com.cars.adverts.controller.models.{Advertisement, DateUtils}
 import com.cars.adverts.dao.{CarAdvertEntity, CarAdvertsRepository, FuelTypeRepository, VehicleConditionRepository}
+import org.mockito.Matchers
 import org.scalatest.{BeforeAndAfter, FlatSpec}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -33,6 +34,16 @@ class AdvertsServiceSpec extends FlatSpec with ScalaFutures with BeforeAndAfter 
     assert(mayBeAdvertisement.get.fuelType == "PETROL")
     assert(mayBeAdvertisement.get.firstReg.isDefined)
 
+  }
+
+
+  it should "List all the entities " in {
+
+    val id = UUID.randomUUID()
+    when(mockCarAdvertRepository.getAllWithMeta(Some("id"),Some("desc"))).thenReturn(Future.successful(getManyEntities()))
+    val advertisements = advertsService.getAll(Some("id"),Some("desc")).futureValue
+
+    assert(advertisements.length == 5)
   }
 
 
