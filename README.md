@@ -28,6 +28,12 @@ b) Without docker
 * The require schema is already created using flyway . You dont have to do anything
 * the details of the postgres can be seen in the config.yml
 
+
+# Migrations (only if you are Looking to the set up postgres in your local box)
+ * THe app is integrated with flyway
+ * Please enable flywayMigration flag in config.yml ONLY if you are looking to set up postgres in your local machine
+ * Check resources folder for scripts
+
 Below are sample requests
 
 # Create Advertisement Http method - PUT
