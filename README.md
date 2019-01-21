@@ -4,7 +4,7 @@ car-adverts-api
 
 
 
-# Create Advertisement HTTP method - PUT
+# Create Advertisement Http method - PUT
 
 http://localhost:8000/advertisement
 
@@ -52,10 +52,9 @@ http://localhost:8000/advertisement/e331f42e-10d3-4626-9713-077237d5542a
 
 http://localhost:8000/advertisement?sortKey=firstReg&sortOrder=desc
 
-valid sortkeys are
-id,title,price,mileage,firstReg,fuelType
+valid sortkeys are  (id,title,price,mileage,firstReg,fuelType)
 
-valid sortOrder desc,asc
+valid sortOrder are (desc,asc)
 
 # Delete Advertisement Http method - DELETE
 
